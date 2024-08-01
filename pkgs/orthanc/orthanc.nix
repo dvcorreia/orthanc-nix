@@ -4,14 +4,7 @@
   stdenv,
   fetchhg,
 }:
-let
-  # trying to get dicom dict setup (not working)
-  dcmtk-w-dict = pkgs.dcmtk.overrideAttrs {
-    cmakeFlags = [
-      "-DDCMTK_DEFAULT_DICT=builtin"
-    ];
-  };
-in
+
 stdenv.mkDerivation (finalAttrs: {
   pname = "orthanc";
   version = "1.12.4";
@@ -44,7 +37,6 @@ stdenv.mkDerivation (finalAttrs: {
     jsoncpp
     libuuid
     boost
-    #dcmtk-w-dict
     dcmtk # implements the dicom standard
     #sqlitecpp
     #gflags
@@ -55,6 +47,9 @@ stdenv.mkDerivation (finalAttrs: {
     "-DALLOW_DOWNLOADS=OFF"
     "-DSTATIC_BUILD=OFF"
     "-DCMAKE_BUILD_TYPE=Debug"
+    "-DUSE_SYSTEM_DCMTK=OFF"
+    "-DSTANDALONE_BUILD=ON"
+    "-DDCMTK_DICTIONARY_DIR=${pkgs.dcmtk}/share/dcmtk-${pkgs.dcmtk.version}/"
   ];
 
   configurePhase = ''
