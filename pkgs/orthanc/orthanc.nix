@@ -40,33 +40,38 @@ stdenv.mkDerivation (finalAttrs: {
     dcmtk # implements the dicom standard
     #sqlitecpp
     #gflags
-    #locale
+    locale
   ];
 
   cmakeFlags = [
+    "-DCMAKE_BUILD_TYPE=Release"
+    "-DDCMTK_DICTIONARY_DIR=${pkgs.dcmtk}/share/dcmtk-${pkgs.dcmtk.version}/"
+    "-DBUILD_CONNECTIVITY_CHECKS=OFF"
+    "-DDCMTK_LIBRARIES=oflog;ofstd"
     "-DALLOW_DOWNLOADS=OFF"
     "-DSTATIC_BUILD=OFF"
-    "-DCMAKE_BUILD_TYPE=Debug"
-    "-DUSE_SYSTEM_DCMTK=OFF"
-    "-DSTANDALONE_BUILD=ON"
-    "-DDCMTK_DICTIONARY_DIR=${pkgs.dcmtk}/share/dcmtk-${pkgs.dcmtk.version}/"
   ];
 
   configurePhase = ''
     mkdir Build
     cd ./Build
-    cmake ../OrthancServer/
+    cmake $cmakeFlags ../OrthancServer/
+  '';
+
+  doCheck = false; # ISSUE: the file /etc/localtime must be present on the filesystem
+  checkPhase = ''
+    ./UnitTests
   '';
 
   buildPhase = ''
-    make
+    make -j`nproc --all`
   '';
 
   installPhase = ''
     runHook preInstall
 
     mkdir -p $out/bin
-    cp * $out/bin
+    cp ./Orthanc $out/bin
 
     runHook postInstall
   '';
