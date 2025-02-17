@@ -1,9 +1,41 @@
 {
-  description = "Healthcare Open Source software packages and services for Nix";
+  description = "Orthanc derivations for NixOS";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    nixpkgs.url = "nixpkgs/nixos-unstable";
   };
 
-  outputs = { self, nixpkgs }: { };
+  outputs =
+    {
+      self,
+      nixpkgs,
+      ...
+    }:
+    let
+      supportedSystems = [
+        "aarch64-linux"
+        "aarch64-darwin" # let's try, fingers crossed
+        "x86_64-darwin" # let's try, fingers crossed
+        "x86_64-linux"
+      ];
+
+      forAllSystems = f: nixpkgs.lib.genAttrs supportedSystems (system: f system);
+      nixpkgsFor = forAllSystems (
+        system:
+        import nixpkgs {
+          inherit system;
+          overlays = [ self.overlay ];
+        }
+      );
+    in
+    {
+      overlay = import ./overlay.nix;
+
+      packages = forAllSystems (system: {
+        default = (nixpkgsFor.${system}).orthanc;
+        orthanc = (nixpkgsFor.${system}).orthanc;
+      });
+
+      formatter = forAllSystems (system: (nixpkgsFor.${system}).nixfmt-rfc-style);
+    };
 }

@@ -1,6 +1,3 @@
-let
-  pkgs = import <nixpkgs> {};
-in
-{
+final: prev: {
   orthanc = pkgs.callPackage ./orthanc.nix { };
-}
+};

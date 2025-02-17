@@ -81,8 +81,7 @@ stdenv.mkDerivation (finalAttrs: {
     homepage = "https://www.orthanc-server.com/";
     license = lib.licenses.gpl3Plus;
     maintainers = with lib.maintainers; [
-      jodogne
-      "Alain Mazy"
+      dvcorreia
     ];
     platforms = [
       "x86_64-linux"
