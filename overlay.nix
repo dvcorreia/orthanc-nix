@@ -1,3 +1,3 @@
 final: prev: {
-  orthanc = pkgs.callPackage ./orthanc.nix { };
-};
+  orthanc = final.callPackage ./orthanc.nix { };
+}
