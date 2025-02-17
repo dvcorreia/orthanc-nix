@@ -3,6 +3,7 @@
   pkgs,
   stdenv,
   fetchhg,
+  osxTarget ? "14.0",
 }:
 
 stdenv.mkDerivation (finalAttrs: {
@@ -22,10 +23,12 @@ stdenv.mkDerivation (finalAttrs: {
     curl
     gtest
     protobuf
+  ] ++ lib.optionals stdenv.hostPlatform.isDarwin [
+    darwin.DarwinTools
+    darwin.xcode
   ];
 
   buildInputs = with pkgs; [
-    libgcc
     unzip
     sqlite
     openssl
@@ -41,7 +44,9 @@ stdenv.mkDerivation (finalAttrs: {
     #sqlitecpp
     #gflags
     locale
-  ];
+  ] ++ lib.optionals stdenv.hostPlatform.isLinux [
+    libgcc
+  ] ++ lib.optionals stdenv.hostPlatform.isDarwin [ ];
 
   cmakeFlags = [
     "-DCMAKE_BUILD_TYPE=Release"
@@ -50,9 +55,13 @@ stdenv.mkDerivation (finalAttrs: {
     "-DDCMTK_LIBRARIES=oflog;ofstd"
     "-DALLOW_DOWNLOADS=OFF"
     "-DSTATIC_BUILD=OFF"
+  ] ++ lib.optionals stdenv.hostPlatform.isDarwin [
+    "-GXcode"
+    "-DCMAKE_OSX_DEPLOYMENT_TARGET=${osxTarget}"
   ];
 
   configurePhase = ''
+    xcode-select --print-path
     mkdir Build
     cd ./Build
     cmake $cmakeFlags ../OrthancServer/
@@ -81,11 +90,11 @@ stdenv.mkDerivation (finalAttrs: {
     homepage = "https://www.orthanc-server.com/";
     license = lib.licenses.gpl3Plus;
     maintainers = with lib.maintainers; [
-      jodogne
-      "Alain Mazy"
+      dvcorreia
     ];
     platforms = [
       "x86_64-linux"
+      "aarch64-darwin"
     ];
   };
 })
