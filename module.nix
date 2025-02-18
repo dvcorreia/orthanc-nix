@@ -29,9 +29,9 @@ in
         containing the plugin's shared library (.so file).
       '';
       example = literalExpression ''
-        with pkgs; [
-          orthanc-dicomweb
-          orthanc-webviewer
+        with pkgs.orthancPlugins; [
+          dicomweb
+          webviewer
         ]
       '';
     };
