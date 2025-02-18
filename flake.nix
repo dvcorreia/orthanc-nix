@@ -2,7 +2,7 @@
   description = "Orthanc derivations for NixOS";
 
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-unstable";
+    nixpkgs.url = "nixpkgs/nixos-24.05";
   };
 
   outputs =
