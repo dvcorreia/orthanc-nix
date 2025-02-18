@@ -7,12 +7,12 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "orthanc";
-  version = "1.12.4";
+  version = "1.12.6";
 
   src = fetchhg {
     url = "https://orthanc.uclouvain.be/hg/orthanc/";
-    rev = "023787ecaff2";
-    sha256 = "16mgii4iki1024sd5fih2s9dwmxfxfivzqdawbwgl2s8pfgisgxf";
+    rev = "6679ca3cb466";
+    sha256 = "sha256-Bz8LI4SrovpuXlv7uXdagY9QVzBwZM0dodCKp50X8Nw=";
   };
 
   nativeBuildInputs = with pkgs; [
