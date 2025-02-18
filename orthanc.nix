@@ -64,7 +64,7 @@ stdenv.mkDerivation (finalAttrs: {
   '';
 
   buildPhase = ''
-    make -j`nproc --all`
+    make -j$NIX_BUILD_CORES
   '';
 
   installPhase = ''
