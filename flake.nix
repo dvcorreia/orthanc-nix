@@ -36,6 +36,11 @@
         orthanc = (nixpkgsFor.${system}).orthanc;
       });
 
+      nixosModules = {
+        default = import ./module.nix;
+        orthanc = import ./module.nix;
+      };
+
       formatter = forAllSystems (system: (nixpkgsFor.${system}).nixfmt-rfc-style);
     };
 }
