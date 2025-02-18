@@ -34,6 +34,7 @@
       packages = forAllSystems (system: {
         default = (nixpkgsFor.${system}).orthanc;
         orthanc = (nixpkgsFor.${system}).orthanc;
+        orthanc-sdk = (nixpkgsFor.${system}).orthanc-sdk;
         inherit (nixpkgsFor.${system}) orthancPlugins;
       });
 
