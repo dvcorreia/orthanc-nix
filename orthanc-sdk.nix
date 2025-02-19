@@ -17,6 +17,12 @@ stdenv.mkDerivation (finalAttrs: {
   nativeBuildInputs = with pkgs; [
     cmake
     python3
+    unzip
+    curl
+    civetweb
+    lua
+    icu
+    gtest
   ];
 
   buildInputs = with pkgs; [
@@ -28,15 +34,32 @@ stdenv.mkDerivation (finalAttrs: {
     sqlite
     pugixml
     libuuid
+    openssl
+    dcmtk
+    zlib
   ];
 
   cmakeFlags = [
     "-DCMAKE_BUILD_TYPE=Release"
     "-DALLOW_DOWNLOADS=OFF"
     "-DSTATIC_BUILD=OFF"
+    "-DDCMTK_DICTIONARY_DIR=${pkgs.dcmtk}/share/dcmtk-${pkgs.dcmtk.version}/"
+    "-DDCMTK_LIBRARIES=oflog;ofstd"
     "-DORTHANC_FRAMEWORK_SOURCE=path"
     "-DORTHANC_FRAMEWORK_ROOT=./OrthancFramework/Sources"
     "-DBUILD_SHARED_LIBRARY=ON"
+    "-DUSE_SYSTEM_OPENSSL=ON"
+    "-DZLIB_ROOT=${pkgs.zlib}"
+    "-DGTEST_ROOT=${pkgs.gtest}"
+  ];
+
+  NIX_LDFLAGS = lib.strings.concatStringsSep " " [
+    "-rpath ${pkgs.dcmtk}/lib"
+    "-L${pkgs.zlib}/lib"
+    "-lz"
+    "-L${pkgs.gtest}/lib"
+    "-lgtest"
+    "-lgtest_main"
   ];
 
   configurePhase = ''
