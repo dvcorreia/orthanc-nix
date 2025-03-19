@@ -77,12 +77,10 @@ stdenv.mkDerivation (finalAttrs: {
 
     mkdir -p $out/{lib,include/orthanc-sdk}
 
-    # Install library
     cp ./libOrthancFramework.so* $out/lib/
 
-    # Install headers
     cp -r ../OrthancFramework/Sources/* $out/include/orthanc-sdk/
-    cp ./OrthancFramework.h $out/include/orthanc-sdk/
+    cp ./Include/orthanc-framework/OrthancFramework.h $out/include/orthanc-sdk/
 
     runHook postInstall
   '';
