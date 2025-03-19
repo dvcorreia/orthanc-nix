@@ -14,8 +14,6 @@
     let
       supportedSystems = [
         "aarch64-linux"
-        "aarch64-darwin" # let's try, fingers crossed
-        "x86_64-darwin" # let's try, fingers crossed
         "x86_64-linux"
       ];
 
